@@ -10,14 +10,20 @@ class TasksController extends Controller
     {
         $tasks = Task::all();
 
-        return view('commons.index',['tasks' => $tasks]);
+        return view('commons.index', ['tasks' => $tasks]);
     }
-    public function create(){
+    public function create()
+    {
         $tasks = new Task;
-        return view('commons.create',['tasks'=> $tasks]);
+        return view('commons.create', ['tasks' => $tasks]);
     }
 
-    public function store(Request $request){
+    public function store(Request $request)
+    {
+        $request->validate(['name' => 'required|max:255']);
+        $request->validate(['content' => 'required|max:255']);
+
+
         $task = new Task;
         $task->id = $request->id;
         $task->name = $request->name;
@@ -27,18 +33,23 @@ class TasksController extends Controller
         return redirect('/');
     }
 
-    public function show($id){
+    public function show($id)
+    {
         $task = Task::findOrFail($id);
 
-        return view('commons.show',['task'=> $task]);
+        return view('commons.show', ['task' => $task]);
     }
 
-    public function edit($id){
+    public function edit($id)
+    {
         $tasks = Task::findOrFail($id);
-        return view('commons.edit',['task'=> $tasks]);
+        return view('commons.edit', ['task' => $tasks]);
     }
+    public function update(Request $request, $id)
+    {
+        $request->validate(['name' => 'required|max:255']);
+        $request->validate(['content' => 'required|max:255']);
 
-    public function update(Request $request, $id){
         $task = Task::findOrFail($id);
         $task->name = $request->name;
         $task->content = $request->content;
