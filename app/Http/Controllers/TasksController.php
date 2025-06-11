@@ -22,12 +22,13 @@ class TasksController extends Controller
     {
         $request->validate(['name' => 'required|max:255']);
         $request->validate(['content' => 'required|max:255']);
-
+        $request->validate(['status'=> 'required|max:10']);
 
         $task = new Task;
         $task->id = $request->id;
         $task->name = $request->name;
         $task->content = $request->content;
+        $task->status = $request->status;
         $task->save();
 
         return redirect('/');
@@ -49,10 +50,12 @@ class TasksController extends Controller
     {
         $request->validate(['name' => 'required|max:255']);
         $request->validate(['content' => 'required|max:255']);
+        $request->validate(['status'=> 'required|max:10']);
 
         $task = Task::findOrFail($id);
         $task->name = $request->name;
         $task->content = $request->content;
+        $task->status = $request->status;
         $task->save();
         return redirect('/');
     }

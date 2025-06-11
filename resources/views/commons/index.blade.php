@@ -13,6 +13,7 @@
       <th>番号</th>
       <th>タスク名</th>
       <th>タスク内容</th>
+      <th>タスク状態</th>
     </tr>
     </thead>
     <tbody>
@@ -21,6 +22,7 @@
       <td><a class="link link-hover text-info" href="tasks/{{ $task->id }}">{{ $task->id }}</a></td>
       <td>{{ $task->name }}</td>
       <td>{{ $task->content }}</td>
+      <td>{{ $task->status }}</td>
     </tr>
     @endforeach
     </tbody>

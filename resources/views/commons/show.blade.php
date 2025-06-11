@@ -19,6 +19,10 @@
             <th>タスク内容</th>
             <td>{{ $task->content }}</td>
         </tr>
+        <tr>
+            <th>タスク状態</th>
+            <td>{{ $task->status }}</td>
+        </tr>
     </table>
 
 <a class="btn btn-outline" href="{{ route('commons.edit', $task->id) }}">このメッセージを編集</a>
