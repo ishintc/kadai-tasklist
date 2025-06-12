@@ -8,7 +8,8 @@ class TasksController extends Controller
 {
     public function index()
     {
-        $tasks = Task::all();
+        $tasks = Task::orderBy("id","desc")->paginate(10);
+        //$tasks = Task::all();
 
         return view('commons.index', ['tasks' => $tasks]);
     }
@@ -25,7 +26,6 @@ class TasksController extends Controller
         $request->validate(['status'=> 'required|max:10']);
 
         $task = new Task;
-        $task->id = $request->id;
         $task->name = $request->name;
         $task->content = $request->content;
         $task->status = $request->status;

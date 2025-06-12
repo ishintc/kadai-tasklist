@@ -28,6 +28,8 @@
     </tbody>
     </table>
   @endif
+
+  {{ $tasks->links() }}
   {{-- メッセージ作成ページへのリンク --}}
   <a class="btn btn-primary" href="{{ route('commons.create') }}">新規タスクの追加</a>
 @endsection
