@@ -4,6 +4,9 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use App\Models\Task;
+use Directory;
+use Illuminate\Support\Facades\Auth;
+
 class TasksController extends Controller
 {
     public function index()
@@ -23,24 +26,31 @@ class TasksController extends Controller
 
     public function create()
     {
-        $tasks = new Task;
-        return view('commons.create', ['tasks' => $tasks]);
+        if (Auth::check()) {
+            $tasks = new Task;
+            return view('commons.create', ['tasks' => $tasks]);
+        }
+        return redirect('/');
     }
 
-    public function store(Request $request){
-        $request->validate(['name' => 'required|max:255']);
-        $request->validate(['content' => 'required|max:255']);
-        $request->validate(['status' => 'required|max:10']);
+    public function store(Request $request)
+    {
+        if (Auth::check()) {
+            $request->validate(['name' => 'required|max:255']);
+            $request->validate(['content' => 'required|max:255']);
+            $request->validate(['status' => 'required|max:10']);
 
-        $user_id = $request->user()->id;
-        $request->user()->tasks()->create([
-            'name'=> $request->name,
-            'content'=> $request->content,
-            'status' => $request->status,
-            'user_id' => $user_id
-        ]);
+            $user_id = $request->user()->id;
+            $request->user()->tasks()->create([
+                'name' => $request->name,
+                'content' => $request->content,
+                'status' => $request->status,
+                'user_id' => $user_id
+            ]);
 
-        return redirect('/dashboard');
+            return redirect('/dashboard');
+        }
+        return redirect('/');
     }
 
     public function show($id)
@@ -74,7 +84,7 @@ class TasksController extends Controller
         $task = Task::findOrFail($id);
         if (\Auth::id() === $task->user_id) {
             $task->delete();
-            return back()-> with('success','Delete Successful');
+            return back()->with('success', 'Delete Successful');
         }
         return back()->with('Delete Failed');
     }
