@@ -4,6 +4,9 @@ use App\Http\Controllers\ProfileController;
 use Illuminate\Support\Facades\Route;
 use Illuminate\Support\Facades\Auth;
 use App\Http\Controllers\UsersController;
+use App\Http\Controllers\TasksController;
+use App\Models\Task;
+
 /*
 |--------------------------------------------------------------------------
 | Web Routes
@@ -14,21 +17,26 @@ use App\Http\Controllers\UsersController;
 | be assigned to the "web" middleware group. Make something great!
 |
 */
-Route::get('/', function () {
-    $user = Auth::user();
-    if (!$user) {
-        return view('dashboard');
-    }
-    return redirect()->route('users.show', $user->id);
+// Route::get('/', function () {
+//     $user = Auth::user();
+//     if (!$user) {
+//         return view('dashboard');
+//     }
+//     return redirect()->route('users.show', $user->id);
 
-});
-Route::get('/dashboard', function () {
-    $user = Auth::user();
-    if (!$user) {
-        return redirect()->route('/');
-    }
-    return view('dashboard', ['user' => $user]);
-})->middleware(['auth', 'verified'])->name('dashboard');
+// });
+// Route::get('/dashboard', function () {
+//     $user = Auth::user();
+//     if (!$user) {
+//         return redirect()->route('/');
+//     }
+//     return view('dashboard', ['user' => $user]);
+// })->middleware(['auth', 'verified'])->name('dashboard');
+
+Route::get('/', [TasksController::class, 'index']);
+
+Route::get('/dashboard', [TasksController::class, 'index'])->middleware(['auth', 'verified'])->name('dashboard');
+
 
 Route::get('/users/{id}', [UsersController::class, 'show'])
     ->middleware(['auth', 'verified'])
@@ -43,6 +51,12 @@ Route::middleware('auth')->group(function () {
     //Route::get('/profile', [ProfileController::class, 'edit'])->name('profile.edit');
     //Route::patch('/profile', [ProfileController::class, 'update'])->name('profile.update');
     //Route::delete('/profile', [ProfileController::class, 'destroy'])->name('profile.destroy');
+
+    Route::resource('tasks', TasksController::class, ['only' => ['create', 'update', 'store', 'edit', 'destroy']]);
 });
 
-require __DIR__.'/auth.php';
+Route::get('/commons',[TasksController::class, 'create'])->name('commons.create');
+Route::post('/tasks', [TasksController::class, 'store'])->name('commons.store');
+Route::get('tasks/{id}/edit', [TasksController::class, 'edit'])->name('commons.edit');
+Route::put('tasks/{id}', [TasksController::class, 'update'])->name('commons.update');
+require __DIR__ . '/auth.php';

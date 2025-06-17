@@ -7,7 +7,10 @@
                 {{-- ユーザー情報 --}}
                 @include('users.card')
             </aside>
-
+        </div>
+        <div class="sm:col-span-2">
+            {{-- 投稿一覧 --}}
+            @include('tasks.tasks')
         </div>
     @else
         <div class="prose hero bg-base-200 mx-auto max-w-full rounded">

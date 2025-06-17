@@ -7,4 +7,8 @@
             @include('users.card')
         </aside>
     </div>
+    <div class="sm:col-span-2">
+        {{-- 投稿一覧 --}}
+        @include('tasks.tasks')
+    </div>
 @endsection
