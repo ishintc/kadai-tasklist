@@ -1,8 +1,8 @@
 <?php
 
+use App\Http\Controllers\ProfileController;
 use Illuminate\Support\Facades\Route;
-use App\Http\Controllers\TasksController;
-
+use App\Http\Controllers\UsersController;
 /*
 |--------------------------------------------------------------------------
 | Web Routes
@@ -13,11 +13,21 @@ use App\Http\Controllers\TasksController;
 | be assigned to the "web" middleware group. Make something great!
 |
 */
-Route::get('/', [TasksController::class, 'index']);
-Route::post('/tasks', [TasksController::class, 'store'])->name('commons.store');
-Route::get('/commons',
- [TasksController::class, 'create']
-  )->name('commons.create');
-Route::get('tasks/{id}', [TasksController::class, 'show']);
-Route::get('tasks/{id}/edit',[TasksController::class,'edit'])->name('commons.edit');
-Route::put('tasks/{id}', [TasksController::class, 'update'])->name('commons.update');
+Route::get('/', function () {
+    return view('dashboard');
+});
+Route::get('/dashboard', function () {
+    return view('dashboard');
+})->middleware(['auth', 'verified'])->name('dashboard');
+
+Route::get('/dashboard', [UsersController::class, 'index'])->middleware(['auth', 'verified'])->name('dashboard');
+
+
+Route::middleware('auth')->group(function () {
+    Route::resource('users', UsersController::class, ['only' => ['index', 'show']]);
+    //Route::get('/profile', [ProfileController::class, 'edit'])->name('profile.edit');
+    //Route::patch('/profile', [ProfileController::class, 'update'])->name('profile.update');
+    //Route::delete('/profile', [ProfileController::class, 'destroy'])->name('profile.destroy');
+});
+
+require __DIR__.'/auth.php';
