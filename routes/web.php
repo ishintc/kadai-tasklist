@@ -2,6 +2,7 @@
 
 use App\Http\Controllers\ProfileController;
 use Illuminate\Support\Facades\Route;
+use Illuminate\Support\Facades\Auth;
 use App\Http\Controllers\UsersController;
 /*
 |--------------------------------------------------------------------------
@@ -14,14 +15,28 @@ use App\Http\Controllers\UsersController;
 |
 */
 Route::get('/', function () {
-    return view('dashboard');
+    $user = Auth::user();
+    if (!$user) {
+        return view('dashboard');
+    }
+    return redirect()->route('users.show', $user->id);
+
 });
 Route::get('/dashboard', function () {
-    return view('dashboard');
+    $user = Auth::user();
+    if (!$user) {
+        return redirect()->route('/');
+    }
+    return view('dashboard', ['user' => $user]);
 })->middleware(['auth', 'verified'])->name('dashboard');
 
-Route::get('/dashboard', [UsersController::class, 'index'])->middleware(['auth', 'verified'])->name('dashboard');
+Route::get('/users/{id}', [UsersController::class, 'show'])
+    ->middleware(['auth', 'verified'])
+    ->name('users.show');
 
+Route::get('/users', [UsersController::class, 'show'])
+    ->middleware(['auth', 'verified'])
+    ->name('users.users');
 
 Route::middleware('auth')->group(function () {
     Route::resource('users', UsersController::class, ['only' => ['index', 'show']]);
